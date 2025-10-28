@@ -1,0 +1,94 @@
+---
+import Layout from "./../layouts/Layout.astro";
+---
+
+<Layout>
+  <section class="min-h-screen bg-black text-white py-16">
+    <div class="max-w-5xl mx-auto px-6 text-center">
+      <h1 class="text-4xl font-extrabold mb-4 text-red-400">¡Contáctame!</h1>
+      <p class="text-gray-300 max-w-2xl mx-auto mb-10">
+        ¿Quieres que DJ Jesús anime tu evento? Completa el formulario o escríbeme directamente por mis redes.
+      </p>
+
+      <!-- FORMULARIO (Netlify Forms) -->
+      <form
+        name="contacto"
+        method="POST"
+        data-netlify="true"
+        netlify-honeypot="bot-field"
+        action="/gracias"
+        class="bg-neutral-900 rounded-2xl shadow-lg p-8 text-left max-w-lg mx-auto"
+      >
+        <!-- Requerido por Netlify -->
+        <input type="hidden" name="form-name" value="contacto" />
+        <p class="hidden">
+          <label>No completar: <input name="bot-field" /></label>
+        </p>
+
+        <div class="mb-4">
+          <label for="nombre" class="block text-sm mb-2 text-gray-400">Nombre</label>
+          <input
+            id="nombre"
+            name="nombre"
+            type="text"
+            placeholder="Tu nombre"
+            autocomplete="name"
+            required
+            class="w-full p-3 rounded-lg bg-neutral-800 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-red-500"
+          />
+        </div>
+
+        <div class="mb-4">
+          <label for="correo" class="block text-sm mb-2 text-gray-400">Correo electrónico</label>
+          <input
+            id="correo"
+            name="correo"
+            type="email"
+            placeholder="tucorreo@email.com"
+            autocomplete="email"
+            required
+            class="w-full p-3 rounded-lg bg-neutral-800 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-red-500"
+          />
+        </div>
+
+        <div class="mb-6">
+          <label for="mensaje" class="block text-sm mb-2 text-gray-400">Mensaje</label>
+          <textarea
+            id="mensaje"
+            name="mensaje"
+            rows="4"
+            placeholder="Cuéntame sobre tu evento..."
+            required
+            class="w-full p-3 rounded-lg bg-neutral-800 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-red-500"
+          ></textarea>
+        </div>
+
+        <button
+          type="submit"
+          class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg transition"
+        >
+          ✉️ Enviar mensaje
+        </button>
+      </form>
+
+      <!-- BOTÓN WHATSAPP (fuera del <form>, para no enviar el formulario) -->
+      <button
+        onclick="window.open('https://wa.me/51977548055?text=' + encodeURIComponent('Hola DJ Jesús, quiero información sobre tus servicios para eventos 🎧'), '_blank')"
+        class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition mt-6"
+      >
+        💬 Enviar mensaje directo por WhatsApp
+      </button>
+
+      <!-- REDES -->
+      <div class="mt-12 flex flex-col items-center gap-6 text-xl">
+        <div class="flex gap-6">
+          <a href="https://www.instagram.com/" class="hover:text-pink-400 transition">📷 Instagram</a>
+          <a href="https://www.facebook.com/" class="hover:text-blue-400 transition">📘 Facebook</a>
+          <a href="https://wa.me/51983152206?text=Hola%20DJ%20Jes%C3%BAs%2C%20quiero%20informaci%C3%B3n%20sobre%20tus%20eventos."
+             class="hover:text-green-400 transition">💬 WhatsApp</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+

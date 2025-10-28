@@ -1,0 +1,159 @@
+---
+import Layout from "././../layouts/Layout.astro";
+---
+
+<Layout>
+  <section class="min-h-screen bg-black text-white py-16">
+    <div class="max-w-6xl mx-auto px-6">
+      <h1 class="text-4xl font-extrabold mb-8 text-red-400">Deja Tus Canciones Favoritas</h1>
+
+      <!-- FORMULARIO -->
+      <form id="songForm" class="bg-neutral-900 rounded-2xl p-6 ring-1 ring-white/10 grid md:grid-cols-2 gap-6">
+        <div class="md:col-span-2">
+          <p class="text-white/70 text-sm">
+            Pega el link de YouTube y el nombre de la canción y lo hacemos un remix.
+          </p>
+        </div>
+
+        <div>
+          <label class="block text-sm mb-2 text-white/70" for="title">Título</label>
+          <input id="title" required placeholder="Retro Flow Vol. 1"
+                 class="w-full px-3 py-2 rounded-lg bg-neutral-800 border border-white/10 focus:outline-none focus:ring-2 focus:ring-red-500" />
+        </div>
+
+        <div>
+          <label class="block text-sm mb-2 text-white/70" for="artist">Artista</label>
+          <input id="artist" required placeholder="DJ Jesús"
+                 class="w-full px-3 py-2 rounded-lg bg-neutral-800 border border-white/10 focus:outline-none focus:ring-2 focus:ring-red-500" />
+        </div>
+
+        <div class="md:col-span-2">
+          <label class="block text-sm mb-2 text-white/70" for="url">URL de YouTube</label>
+          <input id="url" type="url" required placeholder="https://www.youtube.com/watch?v=..."
+                 class="w-full px-3 py-2 rounded-lg bg-neutral-800 border border-white/10 focus:outline-none focus:ring-2 focus:ring-red-500" />
+        </div>
+
+        <div class="md:col-span-2 flex gap-3">
+          <button type="submit" class="bg-red-600 hover:bg-red-700 px-5 py-2 rounded-xl font-semibold">
+            Enviar solicitud
+          </button>
+          <button type="reset" class="border border-white/20 hover:bg-white/10 px-5 py-2 rounded-xl">
+            Limpiar
+          </button>
+        </div>
+      </form>
+
+      <!-- RESULTADO -->
+      <div id="result" class="mt-6 hidden bg-white/5 border border-white/10 rounded-xl p-4"></div>
+    </div>
+  </section>
+
+  <script is:inline>
+    // === CONFIGURA TU NÚMERO AQUÍ (con código de país sin "+") ===
+    const WHATSAPP_PHONE = "51983152206"; // +51 983 152 206
+
+    // Extrae el ID del video desde distintas formas de URL
+    function getYouTubeId(raw) {
+      const input = (raw || '').trim();
+      try {
+        const u = new URL(input);
+
+        // youtube.com o m.youtube.com
+        if (u.hostname.includes('youtube.com') || u.hostname.includes('m.youtube.com')) {
+          const shorts = u.pathname.match(/^\/shorts\/([^/?#]+)/);
+          if (shorts && shorts[1]?.length === 11) return shorts[1];
+
+          const embed = u.pathname.match(/^\/embed\/([^/?#]+)/);
+          if (embed && embed[1]?.length === 11) return embed[1];
+
+          const v = u.searchParams.get('v');
+          if (v && v.length === 11) return v;
+          return null;
+        }
+
+        // youtu.be/ID
+        if (u.hostname.includes('youtu.be')) {
+          const id = u.pathname.replace('/', '');
+          if (id && id.length === 11) return id;
+          return null;
+        }
+
+        return null;
+      } catch {
+        // Si no es una URL, intenta si pegaron solo el ID
+        return /^[a-zA-Z0-9_-]{11}$/.test(input) ? input : null;
+      }
+    }
+
+    function buildEmbedUrl(id) {
+      return `https://www.youtube-nocookie.com/embed/${id}?rel=0`;
+    }
+
+    function buildWhatsAppText({ title, artist, url, videoId }) {
+      const lines = [
+        "Hola DJ Jesús, te envío una solicitud de remix:",
+        `• Título: ${title}`,
+        `• Artista: ${artist}`,
+        `• YouTube: ${url}`,
+      ];
+      if (videoId) lines.push(`• Video ID: ${videoId}`);
+      return lines.join("\n");
+    }
+
+    const form = document.getElementById('songForm');
+    const result = document.getElementById('result');
+
+    form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const title  = document.getElementById('title').value.trim();
+      const artist = document.getElementById('artist').value.trim();
+      const url    = document.getElementById('url').value.trim();
+
+      if (!title || !artist || !url) return;
+
+      const videoId = getYouTubeId(url);
+
+      // Vista previa en la página (opcional)
+      result.classList.remove('hidden');
+      result.innerHTML = `
+        <p class="text-sm text-white/80">¡Gracias! Recibimos tu pedido:</p>
+        <ul class="mt-2 text-white/90 text-sm list-disc pl-5">
+          <li><b>Título:</b> ${title}</li>
+          <li><b>Artista:</b> ${artist}</li>
+          <li><b>URL:</b> <a class="underline" href="${url}" target="_blank" rel="noopener">Abrir</a></li>
+        </ul>
+      `;
+
+      // Si no se puede extraer ID, muestra aviso (igual enviaremos el WhatsApp)
+      if (!videoId) {
+        const err = document.createElement('p');
+        err.className = 'text-red-300 text-sm mt-3';
+        err.textContent = '⚠️ Enlace de YouTube no válido (no se pudo extraer ID). Igual se enviará el mensaje por WhatsApp.';
+        result.appendChild(err);
+      } else {
+        const wrap = document.createElement('div');
+        wrap.className = 'mt-4 border border-white/20 rounded-lg overflow-hidden bg-black';
+        const iframe = document.createElement('iframe');
+        iframe.id = 'yt-embed';
+        iframe.src = buildEmbedUrl(videoId);
+        iframe.width = '100%';
+        iframe.height = '360';
+        iframe.title = 'YouTube video player';
+        iframe.setAttribute('frameborder', '0');
+        iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+        iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+        iframe.setAttribute('allowfullscreen', '');
+        wrap.appendChild(iframe);
+        result.appendChild(wrap);
+      }
+
+      // === Abrir WhatsApp con el mensaje prellenado ===
+      const text = buildWhatsAppText({ title, artist, url, videoId });
+      const waUrl = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(text)}`;
+      window.open(waUrl, "_blank"); // abre WhatsApp (web/móvil)
+
+      form.reset();
+    });
+  </script>
+</Layout>

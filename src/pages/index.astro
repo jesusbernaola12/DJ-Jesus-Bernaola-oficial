@@ -1,0 +1,233 @@
+---
+import Layout from "./../layouts/Layout.astro";
+
+const ROUTES = [
+  { text: "Inicio", path: "/" },
+  { text: "Video Quinceañera", path: "/videoquinceanera" },
+];
+
+const slides = ["/imagenes/1.jpg", "/imagenes/2.jpg", "/imagenes/3.jpg"];
+
+const MIXES = [
+  {
+    title: "Cumbia",
+    cover: "/imagenes/1.jpg",
+    src: "https://www.dropbox.com/scl/fi/pnnmj1h2dnmvm9z23yc80/mix-cumbia-bailable-2021.mp3?rlkey=blswxzxkl8va7ab3vdigksqcm&st=iec8157m&dl=1",
+    tags: ["Cumbia", "Bailable"],
+    desc: "Selección bailable con clásicos infalibles."
+  },
+  {
+    title: "Reguetón Clásico",
+    cover: "/imagenes/2.jpg",
+    src: "https://www.dropbox.com/scl/fi/sxb51fk54u4hnqj54lzm6/J-balvin-mix-dj-Jes-s-Bernaola.mp3?rlkey=qh2vlsolybwh7bmlrrzk9oeyj&st=ohyic1yv&dl=1",
+    tags: ["Reguetón", "Clásicos"],
+    desc: "Flow noventero y 2000s para prender al toque."
+  }
+];
+
+const PLACEHOLDER = "/imagenes/placeholder.jpg";
+---
+
+<Layout title="DJ Jesús">
+  <!-- HEADER -->
+<header
+  class="fixed top-0 left-0 w-full z-50 
+         bg-gradient-to-r from-pink-700 via-red-600 to-orange-500
+         text-yellow-200 shadow-md border-none">
+  <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+    <a href="/" class="text-2xl font-extrabold tracking-wide text-yellow-200">
+      DJ Jesús
+    </a>
+
+    <!-- NAV DESKTOP -->
+    <nav class="hidden md:flex items-center gap-8 text-base font-medium">
+      {ROUTES.map((r) => (
+        <a
+          href={r.path}
+          class="text-yellow-200/90 hover:text-yellow-100 transition-colors"
+        >
+          {r.text}
+        </a>
+      ))}
+    </nav>
+
+
+  <!-- NAV MÓVIL -->
+  <nav
+    id="mobileMenu"
+    class="md:hidden max-w-6xl mx-auto px-6 pb-4 hidden bg-gradient-to-r from-pink-700 via-red-600 to-orange-500"
+    aria-label="Menú móvil"
+  >
+    <ul class="flex flex-col gap-2">
+      {ROUTES.map((r) => (
+        <li>
+          <a
+            href={r.path}
+            class="block w-full rounded-lg px-4 py-2 bg-black/20 hover:bg-black/40 text-yellow-200"
+          >
+            {r.text}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+</header>
+
+  <main class="pt-24">
+    <!-- HERO (negro sólido) -->
+    <section class="w-full bg-black text-gray-100">
+      <div class="max-w-6xl mx-auto px-4 py-10 md:py-16 grid md:grid-cols-2 gap-8 items-center">
+        <div>
+          <p class="text-xs uppercase tracking-widest text-red-300">Sesiones en vivo · Mezclas exclusivas</p>
+          <h2 class="text-3xl md:text-5xl font-extrabold mt-2">
+            Vibra con el ritmo de <span class="text-red-400">DJ Jesús</span>
+          </h2>
+          <p class="mt-4 text-gray-300">
+            Electrónica + reguetón clásico + tendencias modernas. Shows en vivo, sets personalizados y mixes para cada ocasión.
+          </p>
+          <div class="mt-6 flex gap-3">
+            <a href="/pedidos" class="bg-red-500 hover:bg-red-600 text-gray-100 px-5 py-2 rounded-xl font-semibold shadow">Escuchar mixes</a>
+            <a href="/contacto" class="border border-neutral-700 hover:bg-neutral-800 px-5 py-2 rounded-xl font-semibold text-gray-100">Contrátame</a>
+          </div>
+        </div>
+
+        <!-- Carrusel -->
+        <div class="relative rounded-2xl overflow-hidden shadow-2xl ring-1 ring-black/20">
+          <div id="carousel" class="relative w-full h-56 md:h-80">
+            {slides.map((src, i) => (
+              <img
+                src={src}
+                alt={`Slide ${i + 1}`}
+                loading="lazy"
+                class={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${i === 0 ? 'opacity-100' : 'opacity-0'}`}
+                data-slide={i}
+              />
+            ))}
+            <button type="button" class="absolute left-3 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 rounded-full w-10 h-10 grid place-content-center text-gray-100" data-prev aria-label="Anterior">‹</button>
+            <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 rounded-full w-10 h-10 grid place-content-center text-gray-100" data-next aria-label="Siguiente">›</button>
+            <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
+              {slides.map((_, i) => (<span class="w-2.5 h-2.5 rounded-full bg-black/40" data-dot={i}></span>))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SOBRE MÍ (oscuro) -->
+    <section class="bg-neutral-900 text-gray-100">
+      <div class="max-w-6xl mx-auto px-4 py-14 grid md:grid-cols-[1fr,1.2fr] gap-8 items-center">
+        <img src="/imagenes/4.jpg" alt="DJ Jesús en cabina" class="w-full h-64 md:h-80 object-cover rounded-2xl shadow" loading="lazy" />
+        <div>
+          <h3 class="text-2xl font-bold">Sobre mí</h3>
+          <p class="mt-3 text-gray-300">
+            Soy DJ Jesús: mezclo ritmos electrónicos con sonidos innovadores para hacer vibrar al público.
+            Mi estilo combina energía, técnica y selección musical enfocada en la experiencia del público.
+          </p>
+          <ul class="mt-4 grid sm:grid-cols-2 gap-2 text-gray-300">
+            <li>✅ Eventos y festivales</li>
+            <li>✅ Bodas y quinceañeros</li>
+            <li>✅ Sets personalizados</li>
+            <li>✅ Grabación y postproducción</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- MIS PRIMERAS MEZCLAS -->
+    <section id="mis-primeras-mezclas" class="bg-black text-gray-100">
+      <div class="max-w-6xl mx-auto px-4 pb-16">
+        <h2 class="text-2xl md:text-3xl font-bold">Mis primeras mezclas</h2>
+
+        <div class="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {MIXES.map((m, i) => (
+            <article class="bg-neutral-800/60 rounded-2xl p-4 ring-1 ring-neutral-700 hover:ring-neutral-600 transition">
+              <img
+                src={m.cover || PLACEHOLDER}
+                alt={m.title}
+                class="w-full h-40 object-cover rounded-xl"
+                loading="lazy"
+                onerror={`this.src='${PLACEHOLDER}'`}
+              />
+              <h3 class="mt-3 font-semibold text-lg">{m.title}</h3>
+              {m.desc && <p class="text-sm text-gray-300 mt-1">{m.desc}</p>}
+              {m.tags?.length && (
+                <p class="text-sm text-gray-400 mt-2">
+                  {m.tags.map((t) => (<span class="bg-black/30 px-2 py-0.5 rounded mr-1">{t}</span>))}
+                </p>
+              )}
+              <div class="mt-3 flex gap-2">
+                <button class="play-btn text-sm bg-red-500 hover:bg-red-600 px-3 py-1.5 rounded-lg text-gray-100" data-id={i}>Reproducir</button>
+                <a href={m.src} download class="text-sm border border-neutral-700 px-3 py-1.5 rounded-lg hover:bg-neutral-800 text-gray-100">Descargar</a>
+              </div>
+              <audio id={`audio-${i}`} preload="metadata" class="mt-3 w-full">
+                <source src={m.src} type="audio/mpeg" />
+                Tu navegador no soporta el elemento de audio.
+              </audio>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+
+  <!-- FOOTER -->
+  <footer class="bg-neutral-900 text-gray-200">
+    <div class="max-w-6xl mx-auto px-4 py-8 flex flex-col md:flex-row justify-between gap-4">
+      <p class="text-gray-300">© {new Date().getFullYear()} DJ Jesús — Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script is:inline>
+    // Menú móvil
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (menuBtn && mobileMenu) {
+      menuBtn.addEventListener('click', () => {
+        const isHidden = mobileMenu.classList.contains('hidden');
+        mobileMenu.classList.toggle('hidden');
+        menuBtn.setAttribute('aria-expanded', String(isHidden));
+      });
+    }
+
+    // Audio exclusivo
+    const audios = Array.from(document.querySelectorAll('#mis-primeras-mezclas audio'));
+    const playBtns = Array.from(document.querySelectorAll('#mis-primeras-mezclas .play-btn'));
+    function pauseOthers(except) {
+      audios.forEach((a, idx) => { if (a !== except) { a.pause(); const b = playBtns[idx]; if (b) b.textContent = 'Reproducir'; } });
+    }
+    playBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const i = +btn.dataset.id;
+        const audio = document.getElementById(`audio-${i}`);
+        if (!audio) return;
+        if (audio.paused) { pauseOthers(audio); audio.play(); btn.textContent = 'Pausar'; }
+        else { audio.pause(); btn.textContent = 'Reproducir'; }
+      });
+    });
+    audios.forEach((a, idx) => {
+      a.addEventListener('ended', () => { const b = playBtns[idx]; if (b) b.textContent = 'Reproducir'; });
+      a.addEventListener('play', () => pauseOthers(a));
+    });
+
+    // Carrusel (puntos en amarillo)
+    const root = document.getElementById('carousel');
+    if (root) {
+      const imgs = Array.from(root.querySelectorAll('[data-slide]'));
+      const dots = Array.from(root.querySelectorAll('[data-dot]'));
+      const btnPrev = root.querySelector('[data-prev]');
+      const btnNext = root.querySelector('[data-next]');
+      let i = 0;
+      const show = (idx) => {
+        imgs.forEach((el, j) => el.style.opacity = j === idx ? '1' : '0');
+        dots.forEach((d, j) => d.style.background = j === idx ? 'rgb(234 179 8)' : 'rgba(0,0,0,.4)'); // amarillo activo
+        i = idx;
+      };
+      btnPrev?.addEventListener('click', () => show((i - 1 + imgs.length) % imgs.length));
+      btnNext?.addEventListener('click', () => show((i + 1) % imgs.length));
+      dots.forEach((d, j) => d.addEventListener('click', () => show(j)));
+      setInterval(() => show((i + 1) % imgs.length), 5000);
+      show(0);
+    }
+  </script>
+</Layout>
